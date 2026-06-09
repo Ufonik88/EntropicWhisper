@@ -1,4 +1,4 @@
-from entopicwhisper.config import AppConfig, parse_vocabulary, resolve_backend
+from entropicwhisper.config import AppConfig, parse_vocabulary, resolve_backend
 
 
 def test_parse_vocabulary_strips_blanks_and_preserves_order():
@@ -19,8 +19,8 @@ def test_app_config_defaults_to_safe_paths(tmp_path, monkeypatch):
     assert config.provider == "groq"
     assert config.model == "whisper-large-v3-turbo"
     assert config.llm_model == "llama-3.1-8b-instant"
-    assert config.config_dir == tmp_path / ".config" / "entopicwhisper"
-    assert config.data_dir == tmp_path / ".local" / "share" / "entopicwhisper"
+    assert config.config_dir == tmp_path / ".config" / "entropicwhisper"
+    assert config.data_dir == tmp_path / ".local" / "share" / "entropicwhisper"
 
 
 def test_resolve_backend_detects_x11_when_wayland_missing(monkeypatch):

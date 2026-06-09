@@ -84,11 +84,11 @@ def cmd_hotkey(args: argparse.Namespace) -> int:
     try:
         from pynput import keyboard
     except ImportError:
-        print("Hotkey mode needs pynput: pipx inject entopicwhisper pynput", file=sys.stderr)
+        print("Hotkey mode needs pynput: pipx inject entropicwhisper pynput", file=sys.stderr)
         return 2
 
     config = _config(args)
-    print(f"EntopicWhisper hotkey mode. Press {config.hotkey} to record {args.seconds}s.")
+    print(f"EntropicWhisper hotkey mode. Press {config.hotkey} to record {args.seconds}s.")
 
     def on_activate() -> None:
         synthetic_args = argparse.Namespace(
@@ -134,7 +134,7 @@ def cmd_ui(args: argparse.Namespace) -> int:
         from .ui import run_ui
     except ImportError:
         print(
-            "Web UI requires Flask. Install with:\n  pipx inject entopicwhisper flask",
+            "Web UI requires Flask. Install with:\\n  pipx inject entropicwhisper flask",
             file=sys.stderr,
         )
         return 2
@@ -144,7 +144,7 @@ def cmd_ui(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="entopicwhisper",
+        prog="entropicwhisper",
         description="Ubuntu dictation and meeting notes",
     )
     parser.add_argument("--config", help="Path to config.env")

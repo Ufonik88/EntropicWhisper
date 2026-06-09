@@ -1,4 +1,4 @@
-from entopicwhisper.text import build_cleanup_prompt, clean_transcript_locally, strip_empty_marker
+from entropicwhisper.text import build_cleanup_prompt, clean_transcript_locally, strip_empty_marker
 
 
 def test_clean_transcript_locally_removes_fillers_and_fixes_spacing():

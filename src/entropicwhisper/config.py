@@ -37,13 +37,13 @@ class AppConfig:
     max_context_chars: int = 4000
     vocabulary: list[str] = field(default_factory=list)
     notes_file: Path | None = None
-    config_dir: Path = field(default_factory=lambda: xdg_config_home() / "entopicwhisper")
-    data_dir: Path = field(default_factory=lambda: xdg_data_home() / "entopicwhisper")
+    config_dir: Path = field(default_factory=lambda: xdg_config_home() / "entropicwhisper")
+    data_dir: Path = field(default_factory=lambda: xdg_data_home() / "entropicwhisper")
 
     @classmethod
     def load(cls, path: Path | None = None) -> AppConfig:
-        config_dir = xdg_config_home() / "entopicwhisper"
-        data_dir = xdg_data_home() / "entopicwhisper"
+        config_dir = xdg_config_home() / "entropicwhisper"
+        data_dir = xdg_data_home() / "entropicwhisper"
         path = path or config_dir / "config.env"
         values: dict[str, str] = {}
         if path.exists():
@@ -90,7 +90,7 @@ class AppConfig:
         vocab_path = self.config_dir / "vocabulary.txt"
         if not config_path.exists():
             config_path.write_text(
-                "# EntopicWhisper config\n"
+                "# EntropicWhisper config\\n"
                 "PROVIDER=groq\n"
                 "API_BASE=https://api.groq.com/openai/v1\n"
                 "API_KEY_ENV=GROQ_API_KEY\n"

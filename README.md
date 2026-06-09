@@ -1,4 +1,4 @@
-# EntopicWhisper
+# EntropicWhisper
 
 Ubuntu voice dictation and meeting-notes app inspired by FreeFlow / Wispr Flow.
 
@@ -16,8 +16,8 @@ Ubuntu voice dictation and meeting-notes app inspired by FreeFlow / Wispr Flow.
 ```bash
 sudo apt update
 sudo apt install -y python3-pip python3-venv pipx alsa-utils xclip xdotool
-pipx install git+https://github.com/Ufonik88/EntopicWhisper.git
-entopicwhisper init
+pipx install git+https://github.com/Ufonik88/EntropicWhisper.git
+entropicwhisper init
 export GROQ_API_KEY="your-key"
 ```
 
@@ -30,20 +30,20 @@ sudo apt install -y wl-clipboard
 Optional hotkey mode:
 
 ```bash
-pipx inject entopicwhisper pynput
-entopicwhisper hotkey --seconds 20
+pipx inject entropicwhisper pynput
+entropicwhisper hotkey --seconds 20
 ```
 
 ## Web UI
 
-EntopicWhisper includes a clean, minimal web interface for dictation and meeting notes.
+EntropicWhisper includes a clean, minimal web interface for dictation and meeting notes.
 
 ```bash
 # Install Flask dependency
-pipx inject entopicwhisper flask
+pipx inject entropicwhisper flask
 
 # Launch the UI (opens browser automatically)
-entopicwhisper ui
+entropicwhisper ui
 ```
 
 The UI runs at **http://127.0.0.1:8420** and provides:
@@ -56,9 +56,9 @@ The UI runs at **http://127.0.0.1:8420** and provides:
 
 Options:
 ```bash
-entopicwhisper ui --port 9000           # custom port
-entopicwhisper ui --host 0.0.0.0        # listen on all interfaces
-entopicwhisper ui --no-open             # don't auto-open browser
+entropicwhisper ui --port 9000           # custom port
+entropicwhisper ui --host 0.0.0.0        # listen on all interfaces
+entropicwhisper ui --no-open             # don't auto-open browser
 ```
 
 ## Usage
@@ -66,46 +66,46 @@ entopicwhisper ui --no-open             # don't auto-open browser
 ### Clean rough transcript text locally
 
 ```bash
-echo "um hello there , this is uh a test ." | entopicwhisper cleanup --local
+echo "um hello there , this is uh a test ." | entropicwhisper cleanup --local
 ```
 
 ### Clean with AI and copy to clipboard
 
 ```bash
-entopicwhisper cleanup "raw dictated text" --copy
+entropicwhisper cleanup "raw dictated text" --copy
 ```
 
 ### Record 20 seconds, transcribe, clean, copy
 
 ```bash
-entopicwhisper record --seconds 20 --copy
+entropicwhisper record --seconds 20 --copy
 ```
 
 ### Record and paste into active window
 
 ```bash
-entopicwhisper record --seconds 20 --paste
+entropicwhisper record --seconds 20 --paste
 ```
 
 ### Save meeting notes
 
 ```bash
-entopicwhisper meeting --seconds 1800 --title "Weekly pipeline review"
+entropicwhisper meeting --seconds 1800 --title "Weekly pipeline review"
 ```
 
 ### Use an existing transcript file
 
 ```bash
-entopicwhisper meeting --transcript ./meeting.txt --title "Client call" --no-summarize
+entropicwhisper meeting --transcript ./meeting.txt --title "Client call" --no-summarize
 ```
 
 ## Configuration
 
-`entopicwhisper init` creates:
+`entropicwhisper init` creates:
 
-- `~/.config/entopicwhisper/config.env`
-- `~/.config/entopicwhisper/vocabulary.txt`
-- notes default: `~/.local/share/entopicwhisper/meetings.md`
+- `~/.config/entropicwhisper/config.env`
+- `~/.config/entropicwhisper/vocabulary.txt`
+- notes default: `~/.local/share/entropicwhisper/meetings.md`
 
 Example config:
 
@@ -117,13 +117,13 @@ MODEL=whisper-large-v3-turbo
 LLM_MODEL=llama-3.1-8b-instant
 HOTKEY=ctrl+space
 TOGGLE_HOTKEY=ctrl+shift+space
-NOTES_FILE=/home/YOU/.local/share/entopicwhisper/meetings.md
-VOCABULARY_FILE=/home/YOU/.config/entopicwhisper/vocabulary.txt
+NOTES_FILE=/home/YOU/.local/share/entropicwhisper/meetings.md
+VOCABULARY_FILE=/home/YOU/.config/entropicwhisper/vocabulary.txt
 ```
 
 ## OpenAI-compatible providers
 
-EntopicWhisper expects:
+EntropicWhisper expects:
 
 - transcription endpoint: `POST {API_BASE}/audio/transcriptions`
 - chat endpoint: `POST {API_BASE}/chat/completions`
@@ -132,7 +132,7 @@ Groq works out of the box with `GROQ_API_KEY`.
 
 ## Privacy
 
-There is no EntopicWhisper server. Audio/text only goes to the provider you configure.
+There is no EntropicWhisper server. Audio/text only goes to the provider you configure.
 
 ## Current limitations (v0.1)
 

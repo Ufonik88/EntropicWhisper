@@ -3,7 +3,7 @@ requires = ["hatchling>=1.25"]
 build-backend = "hatchling.build"
 
 [project]
-name = "entopicwhisper"
+name = "entropicwhisper"
 version = "0.2.0"
 description = "Ubuntu voice dictation and meeting notes app inspired by FreeFlow"
 readme = "README.md"
@@ -31,10 +31,10 @@ ui = ["flask>=3.0"]
 dev = ["pytest>=8", "ruff>=0.6"]
 
 [project.scripts]
-entopicwhisper = "entopicwhisper.cli:main"
+entropicwhisper = "entropicwhisper.cli:main"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/entopicwhisper"]
+packages = ["src/entropicwhisper"]
 
 [tool.pytest.ini_options]
 pythonpath = ["src"]

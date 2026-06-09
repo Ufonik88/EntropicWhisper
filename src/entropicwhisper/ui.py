@@ -191,7 +191,7 @@ def update_vocabulary():
 def run_ui(host: str = "127.0.0.1", port: int = 8420, open_browser: bool = True):
     cfg = _cfg()
     cfg.ensure_dirs()
-    print(f"EntopicWhisper UI running at http://{host}:{port}")
+    print(f"EntropicWhisper UI running at http://{host}:{port}")
     if open_browser:
         threading.Timer(0.5, lambda: webbrowser.open(f"http://{host}:{port}")).start()
     app.run(host=host, port=port, debug=False, use_reloader=False, threaded=True)

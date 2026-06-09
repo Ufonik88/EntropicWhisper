@@ -1,4 +1,4 @@
-from entopicwhisper.notes import MeetingNote, append_meeting_note, format_meeting_note
+from entropicwhisper.notes import MeetingNote, append_meeting_note, format_meeting_note
 
 
 def test_format_meeting_note_contains_title_transcript_and_summary():

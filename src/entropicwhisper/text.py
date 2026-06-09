@@ -30,7 +30,7 @@ def build_cleanup_prompt(
 ) -> str:
     vocab = "\n".join(f"- {item}" for item in vocabulary) or "- (none)"
     context = context[-4000:] if context else "(none)"
-    return f"""You are EntopicWhisper, a dictation and meeting-note post-processor.
+    return f"""You are EntropicWhisper, a dictation and meeting-note post-processor.
 
 Mode: {mode}
 
