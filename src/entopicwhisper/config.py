@@ -57,6 +57,10 @@ class AppConfig:
         vocab_file = Path(values.get("VOCABULARY_FILE", config_dir / "vocabulary.txt"))
         vocabulary = parse_vocabulary(vocab_file.read_text()) if vocab_file.exists() else []
         notes_file = Path(values.get("NOTES_FILE", data_dir / "meetings.md"))
+        try:
+            max_context_chars = int(values.get("MAX_CONTEXT_CHARS", "4000"))
+        except (TypeError, ValueError):
+            max_context_chars = 4000
 
         return cls(
             provider=values.get("PROVIDER", "groq"),
@@ -66,7 +70,7 @@ class AppConfig:
             llm_model=values.get("LLM_MODEL", "llama-3.1-8b-instant"),
             hotkey=values.get("HOTKEY", "ctrl+space"),
             toggle_hotkey=values.get("TOGGLE_HOTKEY", "ctrl+shift+space"),
-            max_context_chars=int(values.get("MAX_CONTEXT_CHARS", "4000")),
+            max_context_chars=max_context_chars,
             vocabulary=vocabulary,
             notes_file=notes_file,
             config_dir=config_dir,

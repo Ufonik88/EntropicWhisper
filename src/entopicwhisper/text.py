@@ -30,7 +30,7 @@ def build_cleanup_prompt(
 ) -> str:
     vocab = "\n".join(f"- {item}" for item in vocabulary) or "- (none)"
     context = context[-4000:] if context else "(none)"
-    return f'''You are EntopicWhisper, a dictation and meeting-note post-processor.
+    return f"""You are EntopicWhisper, a dictation and meeting-note post-processor.
 
 Mode: {mode}
 
@@ -51,12 +51,12 @@ Nearby context:
 
 RAW_TRANSCRIPTION:
 {raw}
-'''
+"""
 
 
 def build_meeting_summary_prompt(transcript: str, vocabulary: Sequence[str] = ()) -> str:
     vocab = "\n".join(f"- {item}" for item in vocabulary) or "- (none)"
-    return f'''Turn this transcript into concise meeting notes.
+    return f"""Turn this transcript into concise meeting notes.
 
 Return markdown with exactly these sections:
 ## Summary
@@ -75,4 +75,4 @@ Vocabulary:
 
 Transcript:
 {transcript}
-'''
+"""

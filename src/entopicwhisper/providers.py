@@ -60,7 +60,14 @@ def chat_completion(prompt: str, config: AppConfig) -> str:
     if response.status_code >= 400:
         raise ProviderError(f"Cleanup failed ({response.status_code}): {response.text[:500]}")
     data: dict[str, Any] = response.json()
-    return str(data["choices"][0]["message"]["content"]).strip()
+    choices = data.get("choices") or []
+    if not choices:
+        raise ProviderError("Cleanup returned no choices")
+    message = choices[0].get("message") or {}
+    content = message.get("content")
+    if not isinstance(content, str) or not content.strip():
+        raise ProviderError("Cleanup returned empty content")
+    return content.strip()
 
 
 def cleanup_transcript(

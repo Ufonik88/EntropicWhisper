@@ -1,4 +1,3 @@
-
 from entopicwhisper.notes import MeetingNote, append_meeting_note, format_meeting_note
 
 
