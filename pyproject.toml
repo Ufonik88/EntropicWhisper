@@ -1,0 +1,47 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "entopicwhisper"
+version = "0.1.0"
+description = "Ubuntu voice dictation and meeting notes app inspired by FreeFlow"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "Ufonik" }]
+keywords = ["dictation", "whisper", "ubuntu", "meetings", "notes", "groq", "speech-to-text"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: X11 Applications",
+  "Intended Audience :: End Users/Desktop",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: POSIX :: Linux",
+  "Programming Language :: Python :: 3",
+  "Topic :: Multimedia :: Sound/Audio :: Speech",
+]
+dependencies = [
+  "requests>=2.31",
+]
+
+[project.optional-dependencies]
+hotkey = ["pynput>=1.7"]
+audio = ["sounddevice>=0.4", "numpy>=1.26"]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+entopicwhisper = "entopicwhisper.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/entopicwhisper"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

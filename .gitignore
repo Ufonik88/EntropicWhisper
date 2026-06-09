@@ -1,0 +1,15 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+dist/
+build/
+*.egg-info/
+.env
+config.env
+*.wav
+*.mp3
+*.m4a
+*.log
+.DS_Store
