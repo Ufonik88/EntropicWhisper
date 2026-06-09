@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EntopicWhisper</title>
+<style>
+  :root {
+    --bg:       #0e0e10;
+    --surface:  #18181b;
+    --border:   #27272a;
+    --text:     #e4e4e7;
+    --muted:    #71717a;
+    --accent:   #818cf8;
+    --accent2:  #6366f1;
+    --green:    #34d399;
+    --red:      #f87171;
+    --radius:   10px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Header ─────────────────────────────────────────────────── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+  header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+  header h1 span { color: var(--accent); }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--muted);
+    display: inline-block;
+    margin-right: 8px;
+  }
+  .status-dot.ok { background: var(--green); }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  /* ── Layout ─────────────────────────────────────────────────── */
+  main {
+    flex: 1;
+    display: flex;
+    max-width: 960px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 24px;
+    gap: 24px;
+  }
+  .col { flex: 1; display: flex; flex-direction: column; gap: 16px; }
+
+  /* ── Card ───────────────────────────────────────────────────── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+  }
+  .card h2 {
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  /* ── Buttons ────────────────────────────────────────────────── */
+  button, .btn {
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  button:hover { border-color: var(--accent); color: var(--accent); }
+  button:disabled { opacity: 0.4; cursor: not-allowed; }
+  .btn-primary {
+    background: var(--accent2);
+    border-color: var(--accent2);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--accent); border-color: var(--accent); }
+  .btn-danger {
+    background: transparent;
+    border-color: var(--red);
+    color: var(--red);
+  }
+  .btn-danger:hover { background: var(--red); color: #fff; }
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+  .btn-group { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* ── Inputs ─────────────────────────────────────────────────── */
+  textarea, input[type="text"], select {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    font-size: 13px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    width: 100%;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  textarea:focus, input:focus { border-color: var(--accent); }
+  textarea { min-height: 100px; line-height: 1.6; }
+  label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    margin-bottom: 4px;
+    display: block;
+  }
+  .field { margin-bottom: 12px; }
+
+  /* ── Record ─────────────────────────────────────────────────── */
+  .record-btn {
+    width: 72px; height: 72px;
+    border-radius: 50%;
+    border: 3px solid var(--accent);
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .record-btn .dot {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    background: var(--red);
+    transition: all 0.2s;
+  }
+  .record-btn.recording {
+    border-color: var(--red);
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  .record-btn.recording .dot {
+    border-radius: 4px;
+    width: 20px; height: 20px;
+  }
+  @keyframes pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(248,113,113,0.4); }
+    50% { box-shadow: 0 0 0 12px rgba(248,113,113,0); }
+  }
+  .record-meta {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  .record-timer {
+    font-family: 'SF Mono', monospace;
+    font-size: 28px;
+    font-weight: 300;
+    text-align: center;
+    margin: 12px 0;
+    letter-spacing: 0.05em;
+    color: var(--text);
+  }
+
+  /* ── Result ─────────────────────────────────────────────────── */
+  .result-box {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-size: 14px;
+    line-height: 1.7;
+    min-height: 60px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .result-box.empty { color: var(--muted); font-style: italic; }
+
+  /* ── Toast ──────────────────────────────────────────────────── */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--surface);
+    border: 1px solid var(--green);
+    color: var(--green);
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-size: 13px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 100;
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.error { border-color: var(--red); color: var(--red); }
+
+  /* ── Notes ──────────────────────────────────────────────────── */
+  .notes-content {
+    max-height: 400px;
+    overflow-y: auto;
+    font-size: 13px;
+    line-height: 1.7;
+    white-space: pre-wrap;
+    color: var(--muted);
+  }
+  .notes-content::-webkit-scrollbar { width: 4px; }
+  .notes-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  /* ── Vocab ──────────────────────────────────────────────────── */
+  .vocab-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .vocab-tag {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 12px;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .vocab-tag .remove {
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1;
+  }
+  .vocab-tag .remove:hover { color: var(--red); }
+
+  /* ── Footer ─────────────────────────────────────────────────── */
+  footer {
+    padding: 12px 24px;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ── Tabs ───────────────────────────────────────────────────── */
+  .tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+  }
+  .tab {
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--muted);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── Responsive ─────────────────────────────────────────────── */
+  @media (max-width: 700px) {
+    main { flex-direction: column; padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Entopic<span>Whisper</span></h1>
+  <div class="header-right">
+    <span class="status-dot" id="statusDot"></span>
+    <span id="statusText">Connecting...</span>
+  </div>
+</header>
+
+<main>
+  <!-- Left column: Record + Cleanup -->
+  <div class="col">
+
+    <!-- Record Card -->
+    <div class="card">
+      <h2>Record</h2>
+      <div class="record-timer" id="timer">0:00</div>
+      <button class="record-btn" id="recordBtn" onclick="toggleRecord()">
+        <div class="dot" id="recordDot"></div>
+      </button>
+      <div class="record-meta">
+        <span id="recordStatus">Click to record</span>
+      </div>
+      <div style="margin-top:14px;display:flex;justify-content:center" class="btn-group">
+        <button class="btn-sm" onclick="setDuration(10)">10s</button>
+        <button class="btn-sm" onclick="setDuration(20)">20s</button>
+        <button class="btn-sm" onclick="setDuration(60)">60s</button>
+        <button class="btn-sm" onclick="setDuration(1800)">30m</button>
+      </div>
+    </div>
+
+    <!-- Cleanup Card -->
+    <div class="card">
+      <h2>Cleanup</h2>
+      <div class="field">
+        <label>Raw transcript</label>
+        <textarea id="rawText" placeholder="Paste or type raw dictated text..."></textarea>
+      </div>
+      <div class="btn-group">
+        <button class="btn-primary" onclick="doCleanup('ai')">Clean with AI</button>
+        <button onclick="doCleanup('local')">Local cleanup</button>
+      </div>
+      <div class="field" style="margin-top:14px">
+        <label>Cleaned result</label>
+        <div class="result-box empty" id="cleanedText">No result yet</div>
+      </div>
+      <div class="btn-group" style="margin-top:8px">
+        <button class="btn-sm" onclick="copyResult()">Copy</button>
+        <button class="btn-sm" onclick="saveMeeting()">Save as meeting note</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right column: Notes + Vocabulary -->
+  <div class="col">
+
+    <!-- Notes Card -->
+    <div class="card" style="flex:1">
+      <div class="tabs">
+        <div class="tab active" data-tab="notes" onclick="switchTab('notes')">Meeting Notes</div>
+        <div class="tab" data-tab="vocab" onclick="switchTab('vocab')">Vocabulary</div>
+        <div class="tab" data-tab="settings" onclick="switchTab('settings')">Settings</div>
+      </div>
+
+      <!-- Notes Panel -->
+      <div class="tab-panel active" id="panel-notes">
+        <div class="btn-group" style="margin-bottom:12px">
+          <button class="btn-sm" onclick="loadNotes()">Refresh</button>
+        </div>
+        <div class="notes-content" id="notesContent">Loading...</div>
+      </div>
+
+      <!-- Vocabulary Panel -->
+      <div class="tab-panel" id="panel-vocab">
+        <div class="vocab-list" id="vocabList"></div>
+        <div class="field">
+          <label>Add word or phrase</label>
+          <div style="display:flex;gap:8px">
+            <input type="text" id="vocabInput" placeholder="e.g. Ajax Hub" onkeydown="if(event.key==='Enter')addVocab()">
+            <button class="btn-sm" onclick="addVocab()">Add</button>
+          </div>
+        </div>
+        <button class="btn-sm" onclick="saveVocab()" style="margin-top:8px">Save vocabulary</button>
+      </div>
+
+      <!-- Settings Panel -->
+      <div class="tab-panel" id="panel-settings">
+        <div class="field">
+          <label>Provider</label>
+          <input type="text" id="settingProvider" readonly>
+        </div>
+        <div class="field">
+          <label>Transcription model</label>
+          <input type="text" id="settingModel" readonly>
+        </div>
+        <div class="field">
+          <label>LLM model</label>
+          <input type="text" id="settingLLM" readonly>
+        </div>
+        <div class="field">
+          <label>Hotkey</label>
+          <input type="text" id="settingHotkey" readonly>
+        </div>
+        <div class="field">
+          <label>Notes file</label>
+          <input type="text" id="settingNotes" readonly>
+        </div>
+        <p style="font-size:12px;color:var(--muted);margin-top:10px">
+          Edit <code>~/.config/entopicwhisper/config.env</code> to change settings.
+        </p>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>
+  EntopicWhisper v0.2 &middot; <a href="https://github.com/Ufonik88/EntopicWhisper">GitHub</a> &middot; Inspired by FreeFlow
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── State ─────────────────────────────────────────────────────────────────────
+let recording = false;
+let recordSeconds = 20;
+let timerInterval = null;
+let timerStart = 0;
+let vocabulary = [];
+
+// ── Init ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  loadStatus();
+  loadNotes();
+  loadVocab();
+});
+
+// ── API helpers ───────────────────────────────────────────────────────────────
+async function api(url, opts = {}) {
+  const res = await fetch(url, {
+    headers: { 'Content-Type': 'application/json' },
+    ...opts,
+  });
+  return res.json();
+}
+
+// ── Status ────────────────────────────────────────────────────────────────────
+async function loadStatus() {
+  try {
+    const d = await api('/api/status');
+    document.getElementById('statusDot').classList.toggle('ok', d.api_key_set);
+    document.getElementById('statusText').textContent = d.api_key_set
+      ? `${d.provider} / ${d.model}`
+      : 'API key not set';
+    document.getElementById('settingProvider').value = d.provider;
+    document.getElementById('settingModel').value = d.model;
+    document.getElementById('settingLLM').value = d.llm_model;
+    document.getElementById('settingHotkey').value = d.hotkey;
+    document.getElementById('settingNotes').value = d.notes_file || '(not set)';
+  } catch {
+    document.getElementById('statusText').textContent = 'Offline';
+  }
+}
+
+// ── Recording ─────────────────────────────────────────────────────────────────
+function setDuration(s) {
+  recordSeconds = s;
+  document.getElementById('recordStatus').textContent = `Duration: ${fmtTime(s)}`;
+}
+
+function fmtTime(s) {
+  const m = Math.floor(s / 60);
+  const sec = s % 60;
+  return m > 0 ? `${m}:${String(sec).padStart(2, '0')}` : `0:${String(sec).padStart(2, '0')}`;
+}
+
+async function toggleRecord() {
+  if (recording) return;
+  recording = true;
+  const btn = document.getElementById('recordBtn');
+  const dot = document.getElementById('recordDot');
+  const status = document.getElementById('recordStatus');
+  const timer = document.getElementById('timer');
+
+  btn.classList.add('recording');
+  status.textContent = 'Recording...';
+  timerStart = Date.now();
+  timerInterval = setInterval(() => {
+    const elapsed = Math.floor((Date.now() - timerStart) / 1000);
+    timer.textContent = fmtTime(elapsed);
+  }, 200);
+
+  try {
+    const d = await api('/api/record', {
+      method: 'POST',
+      body: JSON.stringify({ seconds: recordSeconds }),
+    });
+
+    if (d.error) {
+      toast(d.error, true);
+    } else {
+      document.getElementById('rawText').value = d.raw || '';
+      document.getElementById('cleanedText').textContent = d.cleaned || '(empty)';
+      document.getElementById('cleanedText').classList.remove('empty');
+      toast('Recording transcribed and cleaned');
+    }
+  } catch (e) {
+    toast('Recording failed: ' + e.message, true);
+  } finally {
+    recording = false;
+    btn.classList.remove('recording');
+    clearInterval(timerInterval);
+    status.textContent = 'Click to record';
+    timer.textContent = '0:00';
+  }
+}
+
+// ── Cleanup ───────────────────────────────────────────────────────────────────
+async function doCleanup(mode) {
+  const raw = document.getElementById('rawText').value.trim();
+  if (!raw) { toast('Enter some text first', true); return; }
+
+  const box = document.getElementById('cleanedText');
+  box.textContent = 'Processing...';
+  box.classList.remove('empty');
+
+  try {
+    const d = await api('/api/cleanup', {
+      method: 'POST',
+      body: JSON.stringify({ text: raw, mode }),
+    });
+    if (d.error) {
+      box.textContent = d.error;
+      toast('Cleanup failed', true);
+    } else {
+      box.textContent = d.cleaned;
+      toast('Text cleaned');
+    }
+  } catch (e) {
+    box.textContent = 'Error: ' + e.message;
+    toast('Cleanup failed', true);
+  }
+}
+
+// ── Copy ──────────────────────────────────────────────────────────────────────
+function copyResult() {
+  const text = document.getElementById('cleanedText').textContent;
+  if (!text || text === 'No result yet') return;
+  navigator.clipboard.writeText(text);
+  toast('Copied to clipboard');
+}
+
+// ── Meeting ───────────────────────────────────────────────────────────────────
+async function saveMeeting() {
+  const transcript = document.getElementById('rawText').value.trim();
+  const cleaned = document.getElementById('cleanedText').textContent;
+  if (!transcript) { toast('Nothing to save', true); return; }
+
+  const title = prompt('Meeting title:', `Meeting ${new Date().toLocaleDateString()}`);
+  if (!title) return;
+
+  try {
+    const d = await api('/api/meeting', {
+      method: 'POST',
+      body: JSON.stringify({ transcript: cleaned || transcript, title, summarize: true }),
+    });
+    if (d.error) {
+      toast(d.error, true);
+    } else {
+      toast('Meeting note saved');
+      loadNotes();
+    }
+  } catch (e) {
+    toast('Save failed: ' + e.message, true);
+  }
+}
+
+// ── Notes ─────────────────────────────────────────────────────────────────────
+async function loadNotes() {
+  try {
+    const d = await api('/api/notes');
+    const box = document.getElementById('notesContent');
+    box.textContent = d.notes || 'No meeting notes yet.';
+  } catch {
+    document.getElementById('notesContent').textContent = 'Failed to load notes.';
+  }
+}
+
+// ── Vocabulary ────────────────────────────────────────────────────────────────
+async function loadVocab() {
+  try {
+    const d = await api('/api/vocabulary');
+    vocabulary = d.words || [];
+    renderVocab();
+  } catch {}
+}
+
+function renderVocab() {
+  const list = document.getElementById('vocabList');
+  list.innerHTML = vocabulary.map((w, i) =>
+    `<span class="vocab-tag">${escHtml(w)}<span class="remove" onclick="removeVocab(${i})">&times;</span></span>`
+  ).join('');
+}
+
+function addVocab() {
+  const input = document.getElementById('vocabInput');
+  const word = input.value.trim();
+  if (!word) return;
+  if (!vocabulary.includes(word)) vocabulary.push(word);
+  input.value = '';
+  renderVocab();
+}
+
+function removeVocab(i) {
+  vocabulary.splice(i, 1);
+  renderVocab();
+}
+
+async function saveVocab() {
+  try {
+    await api('/api/vocabulary', {
+      method: 'PUT',
+      body: JSON.stringify({ words: vocabulary }),
+    });
+    toast('Vocabulary saved');
+  } catch (e) {
+    toast('Save failed', true);
+  }
+}
+
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t =>
+    t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.tab-panel').forEach(p =>
+    p.classList.toggle('active', p.id === 'panel-' + name));
+}
+
+// ── Toast ─────────────────────────────────────────────────────────────────────
+function toast(msg, isError = false) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.className = 'toast show' + (isError ? ' error' : '');
+  setTimeout(() => el.className = 'toast', 2500);
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+</script>
+</body>
+</html>

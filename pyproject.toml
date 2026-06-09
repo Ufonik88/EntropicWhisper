@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "entopicwhisper"
-version = "0.1.0"
+version = "0.2.0"
 description = "Ubuntu voice dictation and meeting notes app inspired by FreeFlow"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -27,6 +27,7 @@ dependencies = [
 [project.optional-dependencies]
 hotkey = ["pynput>=1.7"]
 audio = ["sounddevice>=0.4", "numpy>=1.26"]
+ui = ["flask>=3.0"]
 dev = ["pytest>=8", "ruff>=0.6"]
 
 [project.scripts]

@@ -129,6 +129,19 @@ def _pynput_hotkey(value: str) -> str:
     return "+".join(converted)
 
 
+def cmd_ui(args: argparse.Namespace) -> int:
+    try:
+        from .ui import run_ui
+    except ImportError:
+        print(
+            "Web UI requires Flask. Install with:\n  pipx inject entopicwhisper flask",
+            file=sys.stderr,
+        )
+        return 2
+    run_ui(host=args.host, port=args.port, open_browser=not args.no_open)
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="entopicwhisper",
@@ -171,6 +184,12 @@ def build_parser() -> argparse.ArgumentParser:
     hotkey = sub.add_parser("hotkey", help="Run global hotkey listener")
     hotkey.add_argument("--seconds", type=int, default=20)
     hotkey.set_defaults(func=cmd_hotkey)
+
+    ui = sub.add_parser("ui", help="Launch the web UI")
+    ui.add_argument("--host", default="127.0.0.1")
+    ui.add_argument("--port", type=int, default=8420)
+    ui.add_argument("--no-open", action="store_true", help="Don't auto-open browser")
+    ui.set_defaults(func=cmd_ui)
     return parser
 
 

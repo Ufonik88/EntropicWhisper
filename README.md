@@ -34,6 +34,33 @@ pipx inject entopicwhisper pynput
 entopicwhisper hotkey --seconds 20
 ```
 
+## Web UI
+
+EntopicWhisper includes a clean, minimal web interface for dictation and meeting notes.
+
+```bash
+# Install Flask dependency
+pipx inject entopicwhisper flask
+
+# Launch the UI (opens browser automatically)
+entopicwhisper ui
+```
+
+The UI runs at **http://127.0.0.1:8420** and provides:
+
+- **Record** — Click the microphone to record, auto-transcribe and clean with AI
+- **Cleanup** — Paste raw text and clean with AI or local-only mode
+- **Meeting Notes** — Save transcripts as structured Markdown, view past notes
+- **Vocabulary** — Manage custom terms (product names, jargon, client words)
+- **Settings** — View current provider/model configuration
+
+Options:
+```bash
+entopicwhisper ui --port 9000           # custom port
+entopicwhisper ui --host 0.0.0.0        # listen on all interfaces
+entopicwhisper ui --no-open             # don't auto-open browser
+```
+
 ## Usage
 
 ### Clean rough transcript text locally
